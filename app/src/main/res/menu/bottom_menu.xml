@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/botmenu_high_rated"
+        android:title="@string/high_rated"
+        android:icon="@drawable/baseline_stars_24"/>
+    <item
+        android:id="@+id/botmenu_popular"
+        android:title="@string/popular"
+        android:icon="@drawable/baseline_people_24"/>
+    <item
+        android:id="@+id/botmenu_favorite"
+        android:title="@string/favorite"
+        android:icon="@drawable/baseline_favorite_24"/>
+
+</menu>

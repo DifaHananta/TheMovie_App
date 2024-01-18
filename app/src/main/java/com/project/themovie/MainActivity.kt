@@ -2,10 +2,47 @@ package com.project.themovie
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.project.themovie.databinding.ActivityMainBinding
+import com.project.themovie.favorite.FavoriteFragment
+import com.project.themovie.highRated.HighRatedFragment
+import com.project.themovie.popular.PopularFragment
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var bottomNavigationView: BottomNavigationView
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        bottomNavigationView = binding.bottomMenu
+
+        bottomNavigationView.setOnItemSelectedListener { menuItem ->
+            when(menuItem.itemId) {
+                R.id.botmenu_high_rated -> {
+                    replaceFragment(HighRatedFragment())
+                    true
+                }
+                R.id.botmenu_popular -> {
+                    replaceFragment(PopularFragment())
+                    true
+                }
+                R.id.botmenu_favorite -> {
+                    replaceFragment(FavoriteFragment())
+                    true
+                }
+                else -> false
+            }
+        }
+        replaceFragment(HighRatedFragment())
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()
     }
 }
