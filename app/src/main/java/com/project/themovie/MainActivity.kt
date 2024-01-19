@@ -5,9 +5,9 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.project.themovie.databinding.ActivityMainBinding
-import com.project.themovie.favorite.FavoriteFragment
-import com.project.themovie.highRated.HighRatedFragment
-import com.project.themovie.popular.PopularFragment
+import com.project.themovie.ui.favorite.FavoriteFragment
+import com.project.themovie.ui.highRated.HighRatedFragment
+import com.project.themovie.ui.popular.PopularFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,6 +43,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
     }
 }

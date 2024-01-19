@@ -1,4 +1,4 @@
-package com.project.themovie.favorite
+package com.project.themovie.ui.favorite
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,7 +15,7 @@ class FavoriteFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFavoriteBinding.inflate(inflater, container, false)
 
         return  binding.root

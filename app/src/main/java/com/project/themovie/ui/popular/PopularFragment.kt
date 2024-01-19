@@ -1,4 +1,4 @@
-package com.project.themovie.popular
+package com.project.themovie.ui.popular
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,7 +15,7 @@ class PopularFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPopularBinding.inflate(inflater, container, false)
 
         return  binding.root
