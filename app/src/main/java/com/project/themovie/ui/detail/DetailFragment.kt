@@ -10,9 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.project.themovie.BuildConfig
 import com.project.themovie.R
 import com.project.themovie.databinding.FragmentDetailBinding
 import com.project.themovie.ui.highRated.HighRatedViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailFragment : Fragment() {
 
@@ -25,15 +30,16 @@ class DetailFragment : Fragment() {
     ): View {
         binding = FragmentDetailBinding.inflate(inflater, container, false)
 
-        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[DetailViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[DetailViewModel::class.java]
 
-        movieDetail()
+        getMovieDetail()
+        movieFavorite()
+        showLoading(true)
 
         return binding.root
     }
 
-    private fun movieDetail() {
-
+    private fun getMovieDetail() {
         val movieId = arguments?.getInt(EXTRA_ID)
         if (movieId != null) {
             viewModel.setMovieDetail(movieId.toString())
@@ -44,11 +50,11 @@ class DetailFragment : Fragment() {
         viewModel.getMovieDetail().observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.apply {
-                    val baseImageUrl = "https://image.tmdb.org/t/p/w780/"
-                    val posterUrl = Uri.parse(baseImageUrl).buildUpon()
+                    val baseUrlImage = BuildConfig.BASE_URL_IMAGE
+                    val posterUrl = Uri.parse(baseUrlImage).buildUpon()
                         .appendEncodedPath(it.posterPath)
                         .build()
-                    val coverUrl = Uri.parse(baseImageUrl).buildUpon()
+                    val coverUrl = Uri.parse(baseUrlImage).buildUpon()
                         .appendEncodedPath(it.backdropPath)
                         .build()
 
@@ -68,11 +74,55 @@ class DetailFragment : Fragment() {
                     tvReleaseDate.text = it.releaseDate
                     tvOverview.text = it.overview
                 }
+                showLoading(false)
             }
         }
     }
 
+    private fun movieFavorite() {
+
+        val movieId = arguments?.getInt(EXTRA_ID)
+        val movieTitle = arguments?.getString(EXTRA_TITLE)
+        val moviePoster = arguments?.getString(EXTRA_POSTER)
+        var isChecked = false
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val count = movieId?.let { viewModel.checkFavorite(it) }
+            withContext(Dispatchers.Main) {
+                if (count != null) {
+                    if (count > 0) {
+                        binding.btnFavorite.isChecked = true
+                        isChecked = true
+                    } else {
+                        binding.btnFavorite.isChecked = false
+                        isChecked = false
+                    }
+                }
+            }
+        }
+
+        binding.btnFavorite.setOnClickListener {
+            isChecked = !isChecked
+            if (isChecked) {
+                if (movieId != null) {
+                    viewModel.addFavorite(movieId, movieTitle.toString(), moviePoster.toString())
+                }
+            } else {
+                if (movieId != null) {
+                    viewModel.removeFavorite(movieId)
+                }
+            }
+            binding.btnFavorite.isChecked = isChecked
+        }
+    }
+
+    private fun showLoading(state: Boolean) {
+        binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
+    }
+
     companion object {
         const val EXTRA_ID = "extra_id"
+        const val EXTRA_TITLE = "extra_title"
+        const val EXTRA_POSTER = "extra_poster"
     }
 }

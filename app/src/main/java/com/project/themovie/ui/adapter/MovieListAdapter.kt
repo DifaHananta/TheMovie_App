@@ -1,15 +1,15 @@
-package com.project.themovie.ui.highRated
+package com.project.themovie.ui.adapter
 
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.project.themovie.BuildConfig
 import com.project.themovie.data.response.ResultsItem
-import com.project.themovie.data.retrofit.ApiConfig
 import com.project.themovie.databinding.ItemMovieBinding
 
-class HighRatedAdapter : RecyclerView.Adapter<HighRatedAdapter.HighRatedViewHolder>() {
+class MovieListAdapter : RecyclerView.Adapter<MovieListAdapter.MovieListViewHolder>() {
 
     private val list = ArrayList<ResultsItem>()
 
@@ -22,39 +22,39 @@ class HighRatedAdapter : RecyclerView.Adapter<HighRatedAdapter.HighRatedViewHold
     fun setList(movie: ArrayList<ResultsItem>) {
         list.clear()
         list.addAll(movie)
+        list.isEmpty()
         notifyDataSetChanged()
     }
 
-    inner class HighRatedViewHolder(private val binding: ItemMovieBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MovieListViewHolder(private val binding: ItemMovieBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResultsItem) {
             binding.root.setOnClickListener {
                 onItemClickCallback?.onItemClicked(item)
             }
             binding.apply {
-                val baseImageUrl = "https://image.tmdb.org/t/p/w780/"
-                val fullImageUrl = Uri.parse(baseImageUrl).buildUpon()
+                val baseUrlImage = BuildConfig.BASE_URL_IMAGE
+                val posterUrl = Uri.parse(baseUrlImage).buildUpon()
                     .appendEncodedPath(item.posterPath)
                     .build()
 
                 Glide.with(itemView)
-                    .load(fullImageUrl)
+                    .load(posterUrl)
                     .dontAnimate()
                     .into(ivItemPhoto)
-                tvTitle.text = item.title
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HighRatedViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieListViewHolder {
         val view = ItemMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return HighRatedViewHolder(view)
+        return MovieListViewHolder(view)
     }
 
     override fun getItemCount(): Int {
        return  list.size
     }
 
-    override fun onBindViewHolder(holder: HighRatedViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MovieListViewHolder, position: Int) {
         holder.bind(list[position])
     }
 
