@@ -3,5 +3,12 @@
     <style name="Base.Theme.TheMovie" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/blue_navy</item>
+        <item name="colorPrimaryVariant">@color/blue_navy</item>
+        <item name="android:statusBarColor">@color/blue_navy</item>
+    </style>
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@android:color/transparent</item>
     </style>
 </resources>

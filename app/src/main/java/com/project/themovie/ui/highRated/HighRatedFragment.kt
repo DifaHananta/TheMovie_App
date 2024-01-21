@@ -1,5 +1,6 @@
 package com.project.themovie.ui.highRated
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -29,8 +30,14 @@ class HighRatedFragment : Fragment() {
         viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[HighRatedViewModel::class.java]
         adapter = MovieListAdapter()
 
-        binding.rvMovie.layoutManager = GridLayoutManager(activity, 3, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            GridLayoutManager(activity, 3, LinearLayoutManager.VERTICAL, false)
+        } else {
+            GridLayoutManager(activity, 5, LinearLayoutManager.VERTICAL, false)
+        }
+        binding.rvMovie.layoutManager = layoutManager
         binding.rvMovie.setHasFixedSize(true)
+
         binding.rvMovie.adapter = adapter
 
         setHighRatedMovies()

@@ -14,6 +14,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomNavigationView: BottomNavigationView
 
+    private val highRatedFragment = HighRatedFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -24,25 +26,41 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId) {
                 R.id.botmenu_high_rated -> {
-                    replaceFragment(HighRatedFragment())
+                    showFragment(HighRatedFragment())
                     true
                 }
                 R.id.botmenu_popular -> {
-                    replaceFragment(PopularFragment())
+                    showFragment(PopularFragment())
                     true
                 }
                 R.id.botmenu_favorite -> {
-                    replaceFragment(FavoriteFragment())
+                    showFragment(FavoriteFragment())
                     true
                 }
                 else -> false
             }
         }
-        replaceFragment(HighRatedFragment())
+        if (savedInstanceState == null) {
+            showFragment(highRatedFragment)
+        }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
+    private fun showFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+
+        if (!fragment.isAdded) {
+            transaction.add(R.id.fragment_container, fragment, fragment.javaClass.simpleName)
+        }
+
+        supportFragmentManager.fragments.forEach {
+            if (it == fragment) {
+                transaction.show(it)
+            } else {
+                transaction.hide(it)
+            }
+        }
+
+        transaction.commit()
     }
 
 }
